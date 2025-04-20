@@ -3,7 +3,9 @@ import Image from "next/image"
 import { NavBar } from "@/components/nav-bar"
 import { GlowEffect } from "@/components/glow-effect"
 import { GoogleAuthButton } from "@/components/auth/google-auth-button"
+import { AppleAuthButton } from "@/components/auth/apple-auth-button"
 import { Separator } from "@/components/ui/separator"
+import { Button } from "@/components/ui/button"
 
 export default function LoginPage() {
   return (
@@ -28,7 +30,10 @@ export default function LoginPage() {
             </div>
 
             <div className="space-y-6">
-              <GoogleAuthButton mode="signin" />
+              <div className="flex flex-col gap-3">
+                <GoogleAuthButton mode="signin" />
+                <AppleAuthButton mode="signin" />
+              </div>
 
               <div className="flex items-center gap-3">
                 <Separator className="flex-1 bg-white/10" />
@@ -77,12 +82,12 @@ export default function LoginPage() {
                   </a>
                 </div>
 
-                <button
+                <Button
                   type="submit"
                   className="w-full py-2 px-4 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium shadow-[0_0_15px_rgba(66,153,225,0.3)] hover:shadow-[0_0_25px_rgba(66,153,225,0.5)] transition-all duration-300"
                 >
                   Entrar
-                </button>
+                </Button>
               </div>
             </div>
 
@@ -97,6 +102,29 @@ export default function LoginPage() {
           </div>
         </div>
       </main>
+      <footer className="border-t border-white/10 py-8">
+        <div className="container max-w-6xl">
+          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 relative">
+                <Image src="/images/neureon-logo.png" alt="Neureon" fill className="object-contain" />
+              </div>
+              <span className="text-sm text-[#a0a0b0]">Neureon © {new Date().getFullYear()}</span>
+            </div>
+            <div className="flex gap-6">
+              <Link href="#" className="text-sm text-[#a0a0b0] hover:text-white transition-colors">
+                Termos
+              </Link>
+              <Link href="#" className="text-sm text-[#a0a0b0] hover:text-white transition-colors">
+                Privacidade
+              </Link>
+              <Link href="#" className="text-sm text-[#a0a0b0] hover:text-white transition-colors">
+                Suporte
+              </Link>
+            </div>
+          </div>
+        </div>
+      </footer>
     </div>
   )
 }

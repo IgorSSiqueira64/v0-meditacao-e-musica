@@ -2,9 +2,11 @@ import Link from "next/link"
 import Image from "next/image"
 import { NavBar } from "@/components/nav-bar"
 import { GlowEffect } from "@/components/glow-effect"
-import { GooglePayButton } from "@/components/payment/google-pay-button"
+import { GoogleAuthButton } from "@/components/auth/google-auth-button"
+import { AppleAuthButton } from "@/components/auth/apple-auth-button"
 import { Check, Shield, Star } from "lucide-react"
 import { Separator } from "@/components/ui/separator"
+import { Button } from "@/components/ui/button"
 
 export default function SubscriptionPage() {
   return (
@@ -34,6 +36,17 @@ export default function SubscriptionPage() {
               <h2 className="text-xl font-medium text-white mb-6">Detalhes do pagamento</h2>
 
               <div className="space-y-6">
+                <div className="flex flex-col gap-3">
+                  <GoogleAuthButton mode="subscribe" />
+                  <AppleAuthButton mode="subscribe" />
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <Separator className="flex-1 bg-white/10" />
+                  <span className="text-xs text-[#a0a0b0]">ou</span>
+                  <Separator className="flex-1 bg-white/10" />
+                </div>
+
                 <div className="space-y-4">
                   <div>
                     <label htmlFor="cardName" className="block text-sm font-medium text-[#a0a0b0] mb-1">
@@ -83,13 +96,13 @@ export default function SubscriptionPage() {
                       />
                     </div>
                   </div>
-                </div>
 
-                <Separator className="bg-white/10" />
-
-                <div>
-                  <h3 className="text-lg font-medium text-white mb-4">Ou pague com</h3>
-                  <GooglePayButton amount={29} planName="Plano Mensal" />
+                  <Button
+                    type="submit"
+                    className="w-full py-2 px-4 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium shadow-[0_0_15px_rgba(66,153,225,0.3)] hover:shadow-[0_0_25px_rgba(66,153,225,0.5)] transition-all duration-300"
+                  >
+                    Finalizar Assinatura
+                  </Button>
                 </div>
               </div>
             </div>
@@ -98,7 +111,7 @@ export default function SubscriptionPage() {
               <div className="p-6 border-b border-blue-500/30">
                 <h3 className="text-lg font-medium text-white mb-1">Plano Mensal</h3>
                 <div className="flex items-end gap-1 mb-4">
-                  <span className="text-3xl font-bold text-white">R$29</span>
+                  <span className="text-3xl font-bold text-white">R$4,90</span>
                   <span className="text-[#a0a0b0] mb-1">/mês</span>
                 </div>
                 <p className="text-sm text-[#a0a0b0]">Renovação automática. Cancele a qualquer momento.</p>
@@ -129,7 +142,7 @@ export default function SubscriptionPage() {
               <div className="p-6 border-t border-blue-500/30 bg-blue-900/10">
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-sm text-[#a0a0b0]">Subtotal</span>
-                  <span className="text-sm text-white">R$29,00</span>
+                  <span className="text-sm text-white">R$4,90</span>
                 </div>
                 <div className="flex justify-between items-center mb-4">
                   <span className="text-sm text-[#a0a0b0]">Impostos</span>
@@ -137,7 +150,7 @@ export default function SubscriptionPage() {
                 </div>
                 <div className="flex justify-between items-center font-medium">
                   <span className="text-white">Total hoje</span>
-                  <span className="text-white">R$29,00</span>
+                  <span className="text-white">R$4,90</span>
                 </div>
               </div>
             </div>

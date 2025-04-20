@@ -25,7 +25,7 @@ export default function SessionsPage() {
                 <span className="inline-block w-8 h-[1px] bg-blue-400 mr-3"></span>
                 Foco e Concentração
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <ContentCard
                   title="Sintonizando o Campo do Foco"
                   subtitle="Ativando Acetilcolina"
@@ -55,7 +55,7 @@ export default function SessionsPage() {
                 <span className="inline-block w-8 h-[1px] bg-blue-400 mr-3"></span>
                 Relaxamento
               </h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <ContentCard
                   title="Relaxamento Profundo"
                   subtitle="Delta Waves"

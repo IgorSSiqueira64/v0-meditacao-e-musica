@@ -1,9 +1,9 @@
-import Image from "next/image"
 import Link from "next/link"
+import Image from "next/image"
 import { NavBar } from "@/components/nav-bar"
 import { GlowEffect } from "@/components/glow-effect"
 import { Button } from "@/components/ui/button"
-import { Check, Star, Zap, Shield, Clock, Sparkles } from "lucide-react"
+import { Check, Shield, Star, Sparkles, Brain, Zap, Dumbbell } from "lucide-react"
 
 export default function PremiumPage() {
   return (
@@ -26,15 +26,15 @@ export default function PremiumPage() {
               Neureon Premium
             </h1>
             <p className="text-lg md:text-xl text-[#a0a0b0] max-w-2xl">
-              Desbloqueie todo o potencial do seu cérebro com acesso ilimitado a sessões exclusivas e recursos
-              avançados.
+              Desbloqueie todo o potencial do seu cérebro com acesso ilimitado a recursos avançados e experiências
+              exclusivas.
             </p>
 
             <div className="w-full max-w-xs h-[1px] bg-gradient-to-r from-transparent via-blue-500/50 to-transparent my-8"></div>
 
             <div className="flex flex-wrap justify-center gap-4 mb-8">
               <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10">
-                <Zap className="h-4 w-4 text-blue-400" />
+                <Sparkles className="h-4 w-4 text-blue-400" />
                 <span className="text-sm">Acesso Ilimitado</span>
               </div>
               <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white/5 border border-white/10">
@@ -46,16 +46,23 @@ export default function PremiumPage() {
                 <span className="text-sm">Sem Anúncios</span>
               </div>
             </div>
+
+            <Button
+              asChild
+              className="rounded-full px-6 py-2 h-auto text-base bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 border-0 shadow-[0_0_15px_rgba(66,153,225,0.3)] hover:shadow-[0_0_25px_rgba(66,153,225,0.5)] transition-all duration-300 mb-8"
+            >
+              <Link href="/premium-content">Explorar Conteúdo Premium</Link>
+            </Button>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {/* Plano Mensal */}
             <div className="backdrop-blur-md bg-white/5 border border-white/10 rounded-3xl overflow-hidden transition-all hover:bg-white/8 hover:border-blue-500/30 hover:shadow-[0_0_30px_rgba(66,153,225,0.2)] group">
               <div className="p-8">
                 <h3 className="text-xl font-medium text-white mb-2">Plano Mensal</h3>
                 <p className="text-[#a0a0b0] mb-6">Acesso completo com flexibilidade</p>
                 <div className="flex items-end gap-1 mb-6">
-                  <span className="text-4xl font-bold text-white">R$29</span>
+                  <span className="text-4xl font-bold text-white">R$4,90</span>
                   <span className="text-[#a0a0b0] mb-1">/mês</span>
                 </div>
                 <Button className="w-full rounded-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 border-0 shadow-[0_0_15px_rgba(66,153,225,0.3)] hover:shadow-[0_0_25px_rgba(66,153,225,0.5)] transition-all duration-300">
@@ -85,7 +92,7 @@ export default function PremiumPage() {
             </div>
 
             {/* Plano Anual (Destaque) */}
-            <div className="backdrop-blur-md bg-gradient-to-b from-blue-900/20 to-purple-900/20 border border-blue-500/30 rounded-3xl overflow-hidden transition-all hover:shadow-[0_0_30px_rgba(66,153,225,0.4)] relative lg:scale-110 lg:-mt-4 lg:-mb-4 z-10">
+            <div className="backdrop-blur-md bg-gradient-to-b from-blue-900/20 to-purple-900/20 border border-blue-500/30 rounded-3xl overflow-hidden transition-all hover:shadow-[0_0_30px_rgba(66,153,225,0.4)] relative z-10">
               <div className="absolute top-0 left-0 right-0 bg-gradient-to-r from-blue-500 to-purple-500 text-center py-1.5">
                 <span className="text-xs font-medium flex items-center justify-center">
                   <Sparkles className="h-3 w-3 mr-1" /> MAIS POPULAR
@@ -95,10 +102,10 @@ export default function PremiumPage() {
                 <h3 className="text-xl font-medium text-white mb-2">Plano Anual</h3>
                 <p className="text-[#a0a0b0] mb-6">Economize 40% com pagamento anual</p>
                 <div className="flex items-end gap-1 mb-2">
-                  <span className="text-4xl font-bold text-white">R$199</span>
+                  <span className="text-4xl font-bold text-white">R$49</span>
                   <span className="text-[#a0a0b0] mb-1">/ano</span>
                 </div>
-                <p className="text-sm text-blue-300 mb-6">Equivalente a R$16,58/mês</p>
+                <p className="text-sm text-blue-300 mb-6">Equivalente a R$4,08/mês</p>
                 <Button className="w-full rounded-full bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 border-0 shadow-[0_0_20px_rgba(66,153,225,0.4)] hover:shadow-[0_0_30px_rgba(66,153,225,0.6)] transition-all duration-300">
                   Obter Melhor Oferta
                 </Button>
@@ -128,75 +135,76 @@ export default function PremiumPage() {
                 </ul>
               </div>
             </div>
-
-            {/* Plano Vitalício */}
-            <div className="backdrop-blur-md bg-white/5 border border-white/10 rounded-3xl overflow-hidden transition-all hover:bg-white/8 hover:border-blue-500/30 hover:shadow-[0_0_30px_rgba(66,153,225,0.2)] group">
-              <div className="p-8">
-                <h3 className="text-xl font-medium text-white mb-2">Plano Vitalício</h3>
-                <p className="text-[#a0a0b0] mb-6">Acesso permanente, pagamento único</p>
-                <div className="flex items-end gap-1 mb-6">
-                  <span className="text-4xl font-bold text-white">R$599</span>
-                  <span className="text-[#a0a0b0] mb-1">/único</span>
-                </div>
-                <Button className="w-full rounded-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 border-0 shadow-[0_0_15px_rgba(66,153,225,0.3)] hover:shadow-[0_0_25px_rgba(66,153,225,0.5)] transition-all duration-300">
-                  Adquirir Vitalício
-                </Button>
-              </div>
-              <div className="border-t border-white/10 p-8">
-                <ul className="space-y-4">
-                  <li className="flex items-start">
-                    <Check className="h-5 w-5 text-blue-400 mr-2 flex-shrink-0 mt-0.5" />
-                    <span className="text-[#a0a0b0]">Acesso vitalício a todo conteúdo</span>
-                  </li>
-                  <li className="flex items-start">
-                    <Check className="h-5 w-5 text-blue-400 mr-2 flex-shrink-0 mt-0.5" />
-                    <span className="text-[#a0a0b0]">Todas as atualizações futuras</span>
-                  </li>
-                  <li className="flex items-start">
-                    <Check className="h-5 w-5 text-blue-400 mr-2 flex-shrink-0 mt-0.5" />
-                    <span className="text-[#a0a0b0]">Sessões exclusivas para membros vitalícios</span>
-                  </li>
-                  <li className="flex items-start">
-                    <Check className="h-5 w-5 text-blue-400 mr-2 flex-shrink-0 mt-0.5" />
-                    <span className="text-[#a0a0b0]">Suporte VIP</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
           </div>
 
           <div className="mt-20 backdrop-blur-md bg-white/5 border border-white/10 rounded-3xl p-8 md:p-12">
-            <h2 className="text-2xl font-medium text-white mb-8 text-center">Por que escolher o Neureon Premium?</h2>
+            <h2 className="text-2xl font-medium text-white mb-8 text-center">Recursos Premium Exclusivos</h2>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              <div className="text-center">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="backdrop-blur-md bg-gradient-to-br from-blue-900/10 to-purple-900/10 border border-blue-500/20 rounded-xl p-6 text-center hover:shadow-[0_0_25px_rgba(66,153,225,0.2)] transition-all duration-300">
                 <div className="w-16 h-16 rounded-full bg-gradient-to-r from-blue-600/20 to-purple-600/20 flex items-center justify-center mx-auto mb-4 border border-white/10">
                   <Zap className="h-8 w-8 text-blue-400" />
                 </div>
-                <h3 className="text-lg font-medium text-white mb-2">Sessões Avançadas</h3>
-                <p className="text-[#a0a0b0]">
-                  Acesso a sessões de alta potência com frequências específicas para objetivos cognitivos avançados.
+                <h3 className="text-lg font-medium text-white mb-2">Frequências para Pensamentos</h3>
+                <p className="text-[#a0a0b0] mb-4">
+                  Acesso a frequências sonoras específicas que influenciam as ondas cerebrais, ajudando a induzir
+                  estados mentais específicos.
                 </p>
+                <div className="flex flex-wrap gap-2 justify-center mb-4">
+                  <span className="px-2 py-1 rounded-full bg-white/5 text-xs text-[#a0a0b0]">396 Hz</span>
+                  <span className="px-2 py-1 rounded-full bg-white/5 text-xs text-[#a0a0b0]">528 Hz</span>
+                  <span className="px-2 py-1 rounded-full bg-white/5 text-xs text-[#a0a0b0]">963 Hz</span>
+                </div>
+                <Button
+                  asChild
+                  className="rounded-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 border-0 text-xs"
+                >
+                  <Link href="/premium-content">Explorar Frequências</Link>
+                </Button>
               </div>
 
-              <div className="text-center">
+              <div className="backdrop-blur-md bg-gradient-to-br from-blue-900/10 to-purple-900/10 border border-blue-500/20 rounded-xl p-6 text-center hover:shadow-[0_0_25px_rgba(66,153,225,0.2)] transition-all duration-300">
                 <div className="w-16 h-16 rounded-full bg-gradient-to-r from-blue-600/20 to-purple-600/20 flex items-center justify-center mx-auto mb-4 border border-white/10">
-                  <Star className="h-8 w-8 text-purple-400" />
+                  <Dumbbell className="h-8 w-8 text-purple-400" />
                 </div>
-                <h3 className="text-lg font-medium text-white mb-2">Conteúdo Exclusivo</h3>
-                <p className="text-[#a0a0b0]">
-                  Novas sessões semanais desenvolvidas por neurocientistas e especialistas em meditação.
+                <h3 className="text-lg font-medium text-white mb-2">Modo Guerreiro</h3>
+                <p className="text-[#a0a0b0] mb-4">
+                  Ative o modo inspirado em David Goggins para desafios mais intensos e uma abordagem mais disciplinada
+                  para seu desenvolvimento mental.
                 </p>
+                <div className="flex flex-wrap gap-2 justify-center mb-4">
+                  <span className="px-2 py-1 rounded-full bg-white/5 text-xs text-[#a0a0b0]">Autodisciplina</span>
+                  <span className="px-2 py-1 rounded-full bg-white/5 text-xs text-[#a0a0b0]">Resiliência</span>
+                  <span className="px-2 py-1 rounded-full bg-white/5 text-xs text-[#a0a0b0]">Superação</span>
+                </div>
+                <Button
+                  asChild
+                  className="rounded-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 border-0 text-xs"
+                >
+                  <Link href="/premium-content">Ativar Modo Guerreiro</Link>
+                </Button>
               </div>
 
-              <div className="text-center">
+              <div className="backdrop-blur-md bg-gradient-to-br from-blue-900/10 to-purple-900/10 border border-blue-500/20 rounded-xl p-6 text-center hover:shadow-[0_0_25px_rgba(66,153,225,0.2)] transition-all duration-300">
                 <div className="w-16 h-16 rounded-full bg-gradient-to-r from-blue-600/20 to-purple-600/20 flex items-center justify-center mx-auto mb-4 border border-white/10">
-                  <Clock className="h-8 w-8 text-blue-400" />
+                  <Brain className="h-8 w-8 text-green-400" />
                 </div>
-                <h3 className="text-lg font-medium text-white mb-2">Sem Limites</h3>
-                <p className="text-[#a0a0b0]">
-                  Utilize todas as sessões quantas vezes quiser, sem restrições de tempo ou número de reproduções.
+                <h3 className="text-lg font-medium text-white mb-2">Desafio Mental</h3>
+                <p className="text-[#a0a0b0] mb-4">
+                  Fortaleça sua mente com desafios avançados que testam seus limites e desenvolvem uma mentalidade
+                  inabalável.
                 </p>
+                <div className="flex flex-wrap gap-2 justify-center mb-4">
+                  <span className="px-2 py-1 rounded-full bg-white/5 text-xs text-[#a0a0b0]">Respiração</span>
+                  <span className="px-2 py-1 rounded-full bg-white/5 text-xs text-[#a0a0b0]">Visualização</span>
+                  <span className="px-2 py-1 rounded-full bg-white/5 text-xs text-[#a0a0b0]">Desconforto</span>
+                </div>
+                <Button
+                  asChild
+                  className="rounded-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 border-0 text-xs"
+                >
+                  <Link href="/premium-content">Iniciar Desafio</Link>
+                </Button>
               </div>
             </div>
           </div>

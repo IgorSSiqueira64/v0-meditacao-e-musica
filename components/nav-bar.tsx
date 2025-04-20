@@ -3,14 +3,17 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { Menu } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import { NotificationsPopover } from "@/components/notifications"
+import { QuoteNotification } from "@/components/quote-system"
 
 export function NavBar() {
   const pathname = usePathname()
+  const router = useRouter()
   const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
@@ -25,11 +28,15 @@ export function NavBar() {
   const navItems = [
     { name: "Início", href: "/" },
     { name: "Sessões", href: "/sessoes" },
+    { name: "Jornada Consciente", href: "/jornada" },
+    { name: "Desafio Mental", href: "/desafio-mental" },
     { name: "Conhecimento", href: "/conhecimento" },
-    { name: "Sobre", href: "/sobre" },
-    { name: "Objetivos", href: "/objetivos" },
     { name: "Premium", href: "/premium" },
   ]
+
+  const handleStartClick = () => {
+    router.push("/login")
+  }
 
   return (
     <header
@@ -68,50 +75,56 @@ export function NavBar() {
           </nav>
 
           <div className="hidden md:flex items-center gap-3">
-            <Button variant="ghost" className="text-[#a0a0b0] hover:text-white hover:bg-white/5 rounded-full">
-              Entrar
-            </Button>
-            <Button className="rounded-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 border-0">
+            <QuoteNotification />
+            <NotificationsPopover />
+            <Button
+              onClick={handleStartClick}
+              className="rounded-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 border-0 shadow-[0_0_15px_rgba(66,153,225,0.3)] hover:shadow-[0_0_25px_rgba(66,153,225,0.5)] transition-all duration-300"
+            >
               Começar
             </Button>
           </div>
 
           {/* Mobile Navigation */}
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="md:hidden">
-                <Menu className="h-6 w-6" />
-                <span className="sr-only">Menu</span>
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="bg-[#0a0a0a]/95 backdrop-blur-xl border-white/10">
-              <div className="flex flex-col gap-8 mt-8">
-                <nav className="flex flex-col gap-2">
-                  {navItems.map((item) => (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      className={`px-4 py-3 rounded-lg text-base transition-all ${
-                        pathname === item.href
-                          ? "bg-white/10 text-white font-medium"
-                          : "text-[#a0a0b0] hover:text-white"
-                      }`}
+          <div className="flex items-center gap-2 md:hidden">
+            <QuoteNotification />
+            <NotificationsPopover />
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="md:hidden">
+                  <Menu className="h-6 w-6" />
+                  <span className="sr-only">Menu</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="bg-[#0a0a0a]/95 backdrop-blur-xl border-white/10">
+                <div className="flex flex-col gap-8 mt-8">
+                  <nav className="flex flex-col gap-2">
+                    {navItems.map((item) => (
+                      <Link
+                        key={item.name}
+                        href={item.href}
+                        className={`px-4 py-3 rounded-lg text-base transition-all ${
+                          pathname === item.href
+                            ? "bg-white/10 text-white font-medium"
+                            : "text-[#a0a0b0] hover:text-white"
+                        }`}
+                      >
+                        {item.name}
+                      </Link>
+                    ))}
+                  </nav>
+                  <div className="flex flex-col gap-3 mt-4">
+                    <Button
+                      onClick={handleStartClick}
+                      className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 border-0 shadow-[0_0_15px_rgba(66,153,225,0.3)] hover:shadow-[0_0_25px_rgba(66,153,225,0.5)] transition-all duration-300"
                     >
-                      {item.name}
-                    </Link>
-                  ))}
-                </nav>
-                <div className="flex flex-col gap-3 mt-4">
-                  <Button variant="ghost" className="justify-start text-[#a0a0b0] hover:text-white hover:bg-white/5">
-                    Entrar
-                  </Button>
-                  <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 border-0">
-                    Começar
-                  </Button>
+                      Começar
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            </SheetContent>
-          </Sheet>
+              </SheetContent>
+            </Sheet>
+          </div>
         </div>
       </div>
     </header>
