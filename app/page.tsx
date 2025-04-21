@@ -8,6 +8,7 @@ import { NavBar } from "@/components/nav-bar"
 import { GlowEffect } from "@/components/glow-effect"
 import { StarField } from "@/components/star-field"
 import { QuoteBlock } from "@/components/quote-system"
+import { DailyIntention } from "@/components/daily-intention/daily-intention"
 
 export default function Home() {
   return (
@@ -54,6 +55,14 @@ export default function Home() {
               </Button>
             </div>
           </div>
+        </section>
+
+        <section className="container max-w-6xl py-16">
+          <h2 className="text-2xl font-medium text-white mb-8 flex items-center">
+            <span className="inline-block w-8 h-[1px] bg-blue-400 mr-3"></span>
+            Defina Sua Intenção Diária
+          </h2>
+          <DailyIntention />
         </section>
 
         <section className="container max-w-6xl py-16">
@@ -165,6 +174,7 @@ export default function Home() {
           <div className="backdrop-blur-md bg-gradient-to-br from-blue-900/10 to-purple-900/10 border border-blue-500/20 rounded-3xl p-8 md:p-12 flex flex-col md:flex-row items-center gap-8 md:gap-12 shadow-[0_0_25px_rgba(66,153,225,0.3)] relative overflow-hidden group hover:border-blue-500/30 hover:shadow-[0_0_35px_rgba(66,153,225,0.4)] transition-all duration-500">
             <div className="absolute top-0 right-0 w-96 h-96 bg-blue-600/10 rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2"></div>
             <div className="absolute bottom-0 left-0 w-96 h-96 bg-purple-600/10 rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2"></div>
+            <div className="absolute inset-0 bg-gradient-  translate-y-1/2 -translate-x-1/2"></div>
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 blur-sm transform -rotate-12 group-hover:animate-[pulse_4s_ease-in-out_infinite] transition-opacity duration-300"></div>
 
             <div className="flex-1 space-y-5 relative z-10">

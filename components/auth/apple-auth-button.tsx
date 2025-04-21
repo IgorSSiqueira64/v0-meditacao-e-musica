@@ -1,70 +1,104 @@
 "use client"
 
 import { useState } from "react"
-import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
+import { useRouter, useSearchParams } from "next/navigation"
+import { toast } from "@/components/ui/use-toast"
+import { Loader2 } from "lucide-react"
 
 interface AppleAuthButtonProps {
-  mode: "signin" | "signup" | "subscribe"
-  className?: string
+  mode: "signin" | "signup"
 }
 
-export function AppleAuthButton({ mode, className }: AppleAuthButtonProps) {
+export function AppleAuthButton({ mode }: AppleAuthButtonProps) {
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirectPath = searchParams.get("redirect") || "/dashboard"
 
   const handleAppleAuth = async () => {
     setIsLoading(true)
 
     try {
-      // Simulação de autenticação - em produção, isso seria substituído pela API real da Apple
+      // Simulação de autenticação com Apple - em produção, isso seria uma chamada de API real
       await new Promise((resolve) => setTimeout(resolve, 1500))
 
-      // Redirecionar após autenticação bem-sucedida
-      if (mode === "subscribe") {
-        router.push("/assinatura/sucesso")
-      } else {
-        router.push("/dashboard")
-      }
+      // Gerar um nome de usuário aleatório para simular
+      const randomName = `Usuário${Math.floor(Math.random() * 10000)}`
+
+      // Armazenar informações do usuário no localStorage para simular autenticação
+      localStorage.setItem("isAuthenticated", "true")
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          name: randomName,
+          email: `${randomName.toLowerCase()}@icloud.com`,
+          provider: "apple",
+          premium: false,
+          lastSessionUsed: null,
+          sessionsUsedToday: 0,
+          lastSessionDate: null,
+          experiences: [],
+          challenges: [],
+          intentions: [],
+          notifications: [
+            {
+              id: "welcome-apple",
+              type: "update",
+              title: "Conta Apple conectada",
+              description: "Sua conta Apple foi conectada com sucesso. Aproveite a plataforma!",
+              read: false,
+              date: new Date().toISOString(),
+              actionText: "Explorar sessões",
+              actionLink: "/sessoes",
+            },
+          ],
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        }),
+      )
+
+      toast({
+        title: mode === "signin" ? "Login realizado com sucesso" : "Cadastro realizado com sucesso",
+        description: "Bem-vindo à plataforma Neureon!",
+      })
+
+      router.push(redirectPath)
     } catch (error) {
-      console.error("Erro na autenticação:", error)
+      console.error("Erro na autenticação com Apple:", error)
+      toast({
+        title: "Erro na autenticação",
+        description: "Não foi possível autenticar com a Apple. Tente novamente.",
+        variant: "destructive",
+      })
     } finally {
       setIsLoading(false)
     }
   }
 
-  const buttonText = {
-    signin: "Entrar com Apple",
-    signup: "Cadastrar com Apple",
-    subscribe: "Assinar com Apple",
-  }
-
   return (
     <Button
+      variant="outline"
       onClick={handleAppleAuth}
       disabled={isLoading}
-      variant="outline"
-      className={`w-full flex items-center justify-center gap-2 rounded-full border-white/10 hover:bg-white/5 hover:border-white/20 transition-all duration-300 ${className}`}
+      className="w-full flex items-center justify-center gap-2 rounded-full bg-black text-white hover:bg-gray-900 border-gray-700 h-11"
     >
       {isLoading ? (
-        <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
+        <Loader2 className="h-5 w-5 animate-spin" />
       ) : (
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          width="18"
-          height="18"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <path d="M12 20.94c1.5 0 2.75 1.06 4 1.06 3 0 6-8 6-12.22A4.91 4.91 0 0 0 17 5c-2.22 0-4 1.44-5 2-1-.56-2.78-2-5-2a4.9 4.9 0 0 0-5 4.78C2 14 5 22 8 22c1.25 0 2.5-1.06 4-1.06Z" />
-          <path d="M10 2c1 .5 2 2 2 5" />
+        <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M16.125 1c.057 2.277-1.635 4.16-3.72 4.16-2.088 0-3.72-1.883-3.72-4.16 0 0-2.467.16-4.795 2.528-1.023 1.035-1.89 2.435-1.89 4.16 0 3.47 2.468 6.276 5.5 6.276 1.5 0 2.5-.5 3.5-.5s2 .5 3.5.5c3.032 0 5.5-2.806 5.5-6.276 0-1.725-.867-3.125-1.89-4.16-2.328-2.368-4.795-2.528-4.795-2.528M12.845 5.16c-.057 0-.115-.008-.172-.008-.23-.008-.457.008-.675.023.008-.023.008-.046.016-.069.675-1.636 2.59-2.368 4.217-2.368.057 2.046-1.667 3.789-3.386 4.422z" />
         </svg>
       )}
-      <span>{buttonText[mode]}</span>
+      <span>
+        {isLoading
+          ? mode === "signin"
+            ? "Entrando..."
+            : "Cadastrando..."
+          : mode === "signin"
+            ? "Entrar com Apple"
+            : "Cadastrar com Apple"}
+      </span>
     </Button>
   )
 }

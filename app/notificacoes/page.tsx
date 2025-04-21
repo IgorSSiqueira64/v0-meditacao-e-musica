@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { NavBar } from "@/components/nav-bar"
@@ -9,114 +9,58 @@ import { Button } from "@/components/ui/button"
 import { StarField } from "@/components/star-field"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Award, Clock, BookOpen, Star, Calendar, CheckCircle, Bell, X } from "lucide-react"
-
-interface Notification {
-  id: string
-  type: "achievement" | "reminder" | "tip" | "update" | "streak"
-  title: string
-  description: string
-  time: string
-  date: string
-  read: boolean
-  actionText?: string
-  actionLink?: string
-}
+import { isAuthenticated, getCurrentUser, markNotificationAsRead } from "@/services/auth-service"
+import type { UserNotification } from "@/services/auth-service"
 
 export default function NotificationsPage() {
-  const [notifications, setNotifications] = useState<Notification[]>([
-    {
-      id: "1",
-      type: "achievement",
-      title: "Conquista Desbloqueada!",
-      description: "Você completou 3 dias consecutivos de meditação. Continue assim!",
-      time: "14:30",
-      date: "Hoje",
-      read: false,
-    },
-    {
-      id: "2",
-      type: "reminder",
-      title: "Lembrete de Meditação",
-      description: "Não se esqueça da sua sessão de foco de hoje.",
-      time: "09:15",
-      date: "Hoje",
-      read: false,
-      actionText: "Iniciar Sessão",
-      actionLink: "/sessoes/foco",
-    },
-    {
-      id: "3",
-      type: "tip",
-      title: "Dica de Frequência",
-      description: "Experimente a frequência 528Hz para transformação e harmonia interior.",
-      time: "18:45",
-      date: "Ontem",
-      read: true,
-    },
-    {
-      id: "4",
-      type: "update",
-      title: "Novo Conteúdo Disponível",
-      description: "Novas sessões de meditação para foco foram adicionadas.",
-      time: "11:20",
-      date: "Ontem",
-      read: true,
-      actionText: "Explorar",
-      actionLink: "/sessoes",
-    },
-    {
-      id: "5",
-      type: "streak",
-      title: "Mantenha o Ritmo!",
-      description: "Você está a caminho de completar uma semana de prática consistente.",
-      time: "20:10",
-      date: "15/05/2025",
-      read: true,
-    },
-    {
-      id: "6",
-      type: "achievement",
-      title: "Modo Guerreiro Ativado",
-      description: "Você completou seu primeiro desafio no modo guerreiro!",
-      time: "16:30",
-      date: "14/05/2025",
-      read: true,
-    },
-    {
-      id: "7",
-      type: "tip",
-      title: "Dica de Meditação",
-      description: "Para melhorar o foco, tente fixar o olhar em um ponto durante a meditação.",
-      time: "08:45",
-      date: "13/05/2025",
-      read: true,
-    },
-    {
-      id: "8",
-      type: "update",
-      title: "Atualização do Sistema",
-      description: "Adicionamos novas funcionalidades à sua Jornada Consciente.",
-      time: "12:00",
-      date: "12/05/2025",
-      read: true,
-      actionText: "Ver Novidades",
-      actionLink: "/jornada",
-    },
-  ])
+  const [notifications, setNotifications] = useState<UserNotification[]>([])
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+    setIsLoggedIn(isAuthenticated())
+
+    // Carregar notificações do usuário
+    const user = getCurrentUser()
+    if (user) {
+      setNotifications(user.notifications || [])
+    }
+  }, [])
 
   const markAllAsRead = () => {
-    setNotifications(notifications.map((n) => ({ ...n, read: true })))
+    const user = getCurrentUser()
+    if (!user) return
+
+    // Marcar todas as notificações como lidas
+    const updatedNotifications = notifications.map((n) => {
+      markNotificationAsRead(n.id)
+      return { ...n, read: true }
+    })
+
+    setNotifications(updatedNotifications)
   }
 
   const markAsRead = (id: string) => {
+    markNotificationAsRead(id)
+
+    // Atualizar o estado local
     setNotifications(notifications.map((n) => (n.id === id ? { ...n, read: true } : n)))
   }
 
   const removeNotification = (id: string) => {
+    // Remover notificação do estado local
     setNotifications(notifications.filter((n) => n.id !== id))
+
+    // Remover notificação do "banco de dados"
+    const user = getCurrentUser()
+    if (user) {
+      user.notifications = user.notifications.filter((n) => n.id !== id)
+      localStorage.setItem("user", JSON.stringify(user))
+    }
   }
 
-  const getIconForType = (type: Notification["type"]) => {
+  const getIconForType = (type: UserNotification["type"]) => {
     switch (type) {
       case "achievement":
         return <Award className="h-5 w-5 text-yellow-400" />
@@ -129,6 +73,67 @@ export default function NotificationsPage() {
       case "streak":
         return <Calendar className="h-5 w-5 text-orange-400" />
     }
+  }
+
+  if (!mounted) {
+    return (
+      <div className="flex min-h-screen flex-col bg-gradient-to-b from-[#050510] to-[#0c0c18] text-white">
+        <NavBar />
+        <div className="flex-1 flex items-center justify-center">
+          <div className="w-16 h-16 border-4 border-blue-400 border-t-transparent rounded-full animate-spin"></div>
+        </div>
+      </div>
+    )
+  }
+
+  if (!isLoggedIn) {
+    return (
+      <div className="flex min-h-screen flex-col bg-gradient-to-b from-[#050510] to-[#0c0c18] text-white overflow-hidden relative">
+        <StarField />
+        <NavBar />
+
+        <main className="flex-1 relative z-10 flex items-center justify-center">
+          <GlowEffect className="right-1/4 top-1/4" color="rgba(64, 162, 227, 0.3)" />
+          <GlowEffect className="left-1/3 bottom-1/3" color="rgba(138, 43, 226, 0.2)" />
+
+          <div className="backdrop-blur-md bg-white/5 border border-white/10 rounded-3xl p-8 max-w-md w-full text-center">
+            <Bell className="h-12 w-12 text-blue-400 mx-auto mb-4" />
+            <h1 className="text-2xl font-medium text-white mb-2">Acesso Restrito</h1>
+            <p className="text-[#a0a0b0] mb-6">Faça login para acessar suas notificações e acompanhar seu progresso.</p>
+            <Button
+              asChild
+              className="rounded-full px-6 py-2 h-auto text-base bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 border-0"
+            >
+              <Link href="/login?redirect=/notificacoes">Fazer Login</Link>
+            </Button>
+          </div>
+        </main>
+
+        <footer className="border-t border-white/10 py-8 relative z-10">
+          <div className="container max-w-6xl">
+            <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+              <div className="flex items-center gap-2">
+                <div className="w-6 h-6 relative">
+                  <Image src="/images/neureon-logo.png" alt="Neureon" fill className="object-contain" />
+                </div>
+                <span className="text-sm text-[#a0a0b0]">Neureon © {new Date().getFullYear()}</span>
+              </div>
+              <div className="flex gap-6">
+                <Link href="#" className="text-sm text-[#a0a0b0] hover:text-white transition-colors">
+                  Termos
+                </Link>
+                <Link href="#" className="text-sm text-[#a0a0b0] hover:text-white transition-colors">
+                  Privacidade
+                </Link>
+                <Link href="#" className="text-sm text-[#a0a0b0] hover:text-white transition-colors">
+                  Suporte
+                </Link>
+              </div>
+            </div>
+          </div>
+        </footer>
+      </div>
+    )
   }
 
   return (
@@ -195,52 +200,71 @@ export default function NotificationsPage() {
 
               <TabsContent value="all" className="m-0">
                 <div className="divide-y divide-white/10">
-                  {notifications.map((notification) => (
-                    <div
-                      key={notification.id}
-                      className={`p-4 flex gap-4 ${notification.read ? "bg-transparent" : "bg-blue-900/10"}`}
-                      onClick={() => !notification.read && markAsRead(notification.id)}
-                    >
-                      <div className="flex-shrink-0 w-12 h-12 rounded-full bg-white/5 flex items-center justify-center">
-                        {getIconForType(notification.type)}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex justify-between items-start">
-                          <h4 className="text-base font-medium text-white">{notification.title}</h4>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="h-8 w-8 rounded-full -mr-2 -mt-1 text-[#a0a0b0] hover:text-white"
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              removeNotification(notification.id)
-                            }}
-                          >
-                            <X className="h-4 w-4" />
-                            <span className="sr-only">Remover</span>
-                          </Button>
+                  {notifications.length > 0 ? (
+                    notifications.map((notification) => (
+                      <div
+                        key={notification.id}
+                        className={`p-4 flex gap-4 ${notification.read ? "bg-transparent" : "bg-blue-900/10"}`}
+                        onClick={() => !notification.read && markAsRead(notification.id)}
+                      >
+                        <div className="flex-shrink-0 w-12 h-12 rounded-full bg-white/5 flex items-center justify-center">
+                          {getIconForType(notification.type)}
                         </div>
-                        <p className="text-sm text-[#a0a0b0] mb-2">{notification.description}</p>
-                        <div className="flex justify-between items-center">
-                          <div className="flex items-center gap-2">
-                            <span className="text-xs text-[#a0a0b0]">{notification.date}</span>
-                            <span className="text-xs text-[#a0a0b0]">•</span>
-                            <span className="text-xs text-[#a0a0b0]">{notification.time}</span>
-                          </div>
-                          {notification.actionText && notification.actionLink && (
+                        <div className="flex-1 min-w-0">
+                          <div className="flex justify-between items-start">
+                            <h4 className="text-base font-medium text-white">{notification.title}</h4>
                             <Button
-                              variant="link"
-                              size="sm"
-                              className="h-auto p-0 text-sm text-blue-400 hover:text-blue-300"
-                              asChild
+                              variant="ghost"
+                              size="icon"
+                              className="h-8 w-8 rounded-full -mr-2 -mt-1 text-[#a0a0b0] hover:text-white"
+                              onClick={(e) => {
+                                e.stopPropagation()
+                                removeNotification(notification.id)
+                              }}
                             >
-                              <Link href={notification.actionLink}>{notification.actionText}</Link>
+                              <X className="h-4 w-4" />
+                              <span className="sr-only">Remover</span>
                             </Button>
-                          )}
+                          </div>
+                          <p className="text-sm text-[#a0a0b0] mb-2">{notification.description}</p>
+                          <div className="flex justify-between items-center">
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs text-[#a0a0b0]">
+                                {new Date(notification.date).toLocaleDateString("pt-BR", {
+                                  day: "2-digit",
+                                  month: "2-digit",
+                                  year: "2-digit",
+                                })}
+                              </span>
+                              <span className="text-xs text-[#a0a0b0]">•</span>
+                              <span className="text-xs text-[#a0a0b0]">
+                                {new Date(notification.date).toLocaleTimeString("pt-BR", {
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                })}
+                              </span>
+                            </div>
+                            {notification.actionText && notification.actionLink && (
+                              <Button
+                                variant="link"
+                                size="sm"
+                                className="h-auto p-0 text-sm text-blue-400 hover:text-blue-300"
+                                asChild
+                              >
+                                <Link href={notification.actionLink}>{notification.actionText}</Link>
+                              </Button>
+                            )}
+                          </div>
                         </div>
                       </div>
+                    ))
+                  ) : (
+                    <div className="flex flex-col items-center justify-center py-16 text-center">
+                      <Bell className="h-12 w-12 text-[#a0a0b0] mb-4" />
+                      <p className="text-lg font-medium text-white mb-2">Nenhuma notificação</p>
+                      <p className="text-sm text-[#a0a0b0]">Você não tem notificações no momento.</p>
                     </div>
-                  ))}
+                  )}
                 </div>
               </TabsContent>
 
@@ -277,9 +301,20 @@ export default function NotificationsPage() {
                             <p className="text-sm text-[#a0a0b0] mb-2">{notification.description}</p>
                             <div className="flex justify-between items-center">
                               <div className="flex items-center gap-2">
-                                <span className="text-xs text-[#a0a0b0]">{notification.date}</span>
+                                <span className="text-xs text-[#a0a0b0]">
+                                  {new Date(notification.date).toLocaleDateString("pt-BR", {
+                                    day: "2-digit",
+                                    month: "2-digit",
+                                    year: "2-digit",
+                                  })}
+                                </span>
                                 <span className="text-xs text-[#a0a0b0]">•</span>
-                                <span className="text-xs text-[#a0a0b0]">{notification.time}</span>
+                                <span className="text-xs text-[#a0a0b0]">
+                                  {new Date(notification.date).toLocaleTimeString("pt-BR", {
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                  })}
+                                </span>
                               </div>
                               {notification.actionText && notification.actionLink && (
                                 <Button
@@ -338,9 +373,20 @@ export default function NotificationsPage() {
                             <p className="text-sm text-[#a0a0b0] mb-2">{notification.description}</p>
                             <div className="flex justify-between items-center">
                               <div className="flex items-center gap-2">
-                                <span className="text-xs text-[#a0a0b0]">{notification.date}</span>
+                                <span className="text-xs text-[#a0a0b0]">
+                                  {new Date(notification.date).toLocaleDateString("pt-BR", {
+                                    day: "2-digit",
+                                    month: "2-digit",
+                                    year: "2-digit",
+                                  })}
+                                </span>
                                 <span className="text-xs text-[#a0a0b0]">•</span>
-                                <span className="text-xs text-[#a0a0b0]">{notification.time}</span>
+                                <span className="text-xs text-[#a0a0b0]">
+                                  {new Date(notification.date).toLocaleTimeString("pt-BR", {
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                  })}
+                                </span>
                               </div>
                               {notification.actionText && notification.actionLink && (
                                 <Button
@@ -399,9 +445,20 @@ export default function NotificationsPage() {
                             <p className="text-sm text-[#a0a0b0] mb-2">{notification.description}</p>
                             <div className="flex justify-between items-center">
                               <div className="flex items-center gap-2">
-                                <span className="text-xs text-[#a0a0b0]">{notification.date}</span>
+                                <span className="text-xs text-[#a0a0b0]">
+                                  {new Date(notification.date).toLocaleDateString("pt-BR", {
+                                    day: "2-digit",
+                                    month: "2-digit",
+                                    year: "2-digit",
+                                  })}
+                                </span>
                                 <span className="text-xs text-[#a0a0b0]">•</span>
-                                <span className="text-xs text-[#a0a0b0]">{notification.time}</span>
+                                <span className="text-xs text-[#a0a0b0]">
+                                  {new Date(notification.date).toLocaleTimeString("pt-BR", {
+                                    hour: "2-digit",
+                                    minute: "2-digit",
+                                  })}
+                                </span>
                               </div>
                               {notification.actionText && notification.actionLink && (
                                 <Button
