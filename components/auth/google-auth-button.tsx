@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { useRouter, useSearchParams } from "next/navigation"
 import { toast } from "@/components/ui/use-toast"
 import { Loader2 } from "lucide-react"
+import { saveAuthenticatedUser } from "@/services/auth-service"
 
 interface GoogleAuthButtonProps {
   mode: "signin" | "signup"
@@ -23,40 +24,16 @@ export function GoogleAuthButton({ mode }: GoogleAuthButtonProps) {
       // Simulação de autenticação com Google - em produção, isso seria uma chamada de API real
       await new Promise((resolve) => setTimeout(resolve, 1500))
 
-      // Gerar um nome de usuário aleatório para simular
-      const randomName = `Usuário${Math.floor(Math.random() * 10000)}`
+      // Gerar nome de usuário real para simular
+      const randomName = `Usuário Google`
+      const email = `usuario.google@gmail.com`
 
-      // Armazenar informações do usuário no localStorage para simular autenticação
-      localStorage.setItem("isAuthenticated", "true")
-      localStorage.setItem(
-        "user",
-        JSON.stringify({
-          name: randomName,
-          email: `${randomName.toLowerCase()}@gmail.com`,
-          provider: "google",
-          premium: false,
-          lastSessionUsed: null,
-          sessionsUsedToday: 0,
-          lastSessionDate: null,
-          experiences: [],
-          challenges: [],
-          intentions: [],
-          notifications: [
-            {
-              id: "welcome-google",
-              type: "update",
-              title: "Conta Google conectada",
-              description: "Sua conta Google foi conectada com sucesso. Aproveite a plataforma!",
-              read: false,
-              date: new Date().toISOString(),
-              actionText: "Explorar sessões",
-              actionLink: "/sessoes",
-            },
-          ],
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        }),
-      )
+      // Salvar usando o serviço atualizado
+      saveAuthenticatedUser({
+        name: randomName,
+        email: email,
+        provider: "google",
+      })
 
       toast({
         title: mode === "signin" ? "Login realizado com sucesso" : "Cadastro realizado com sucesso",

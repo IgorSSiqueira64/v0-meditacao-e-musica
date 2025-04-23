@@ -8,21 +8,19 @@ import { NavBar } from "@/components/nav-bar"
 import { GlowEffect } from "@/components/glow-effect"
 import { Button } from "@/components/ui/button"
 import { StarField } from "@/components/star-field"
+import { DynamicSessionPlayer } from "@/components/session/dynamic-session-player"
 import { getSessionById } from "@/data/sessions-data"
 import { isAuthenticated, getCurrentUser, saveUserExperience } from "@/services/auth-service"
-import { Play, Pause, SkipBack, SkipForward, Volume2, Star, Clock, Zap, Lock } from "lucide-react"
+import { Clock, Zap, Star, Lock } from "lucide-react"
 
 export default function SessionPage() {
   const params = useParams()
   const router = useRouter()
   const [session, setSession] = useState<ReturnType<typeof getSessionById>>(undefined)
-  const [isPlaying, setIsPlaying] = useState(false)
-  const [currentTime, setCurrentTime] = useState(0)
-  const [duration, setDuration] = useState(0)
-  const [volume, setVolume] = useState(80)
   const [isPremium, setIsPremium] = useState(false)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
   const [mounted, setMounted] = useState(false)
+  const [sessionCompleted, setSessionCompleted] = useState(false)
 
   useEffect(() => {
     setMounted(true)
@@ -47,26 +45,35 @@ export default function SessionPage() {
     }
   }, [params.id, router])
 
-  const handlePlayPause = () => {
-    setIsPlaying(!isPlaying)
+  const handleSessionComplete = () => {
+    setSessionCompleted(true)
 
     // Simular o registro da experiência do usuário
-    if (!isPlaying && session) {
+    if (session) {
       saveUserExperience({
         sessionId: session.id,
         sessionName: session.title,
         duration: 0,
-        completionRate: 0,
+        completionRate: 100,
         rating: null,
         notes: null,
       })
     }
   }
 
-  const formatTime = (seconds: number) => {
-    const mins = Math.floor(seconds / 60)
-    const secs = Math.floor(seconds % 60)
-    return `${mins}:${secs < 10 ? "0" : ""}${secs}`
+  // Mapear os IDs das sessões para os URLs dos áudios fornecidos
+  const getAudioUrl = (sessionId: string) => {
+    const audioMap: Record<string, string> = {
+      foco: "/audio/foco.mp3", // URL padrão
+      relaxamento:
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/O%20Lado%20Oculto%20da%20Luz-CMw2zsSKeaGQLpyBB5gF5BSwaCTbT5.mp3", // O Lado Oculto da Luz
+      "silencio-interior":
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Uma%20energia%20de%20despertar%20interior%20como%20uma%20semente...%20%286bc53eeb26b649e8acf0342375825844%29-336QJN3geRXXfSX9MR1Z7bbm21K95R.mp3", // Uma energia de despertar interior
+      "sono-reparador":
+        "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/Cello%20532hz-EtlzI9f2O2l2pRVt5i8p7PW0Xb1eEd.mp3", // Cello 532hz
+    }
+
+    return audioMap[sessionId] || session?.audioUrl || "/audio/default.mp3"
   }
 
   if (!mounted || !session) {
@@ -89,19 +96,19 @@ export default function SessionPage() {
         <GlowEffect className="right-1/4 top-1/4" color="rgba(64, 162, 227, 0.3)" />
         <GlowEffect className="left-1/3 bottom-1/3" color="rgba(138, 43, 226, 0.2)" />
 
-        <section className="container max-w-5xl py-16 relative z-10">
+        <section className="container max-w-5xl py-8 md:py-16 relative z-10 px-4 md:px-6">
           <div className="flex flex-col md:flex-row gap-8 items-center mb-12">
             <div className="w-full md:w-1/2 aspect-square relative rounded-3xl overflow-hidden">
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-900/30 to-purple-900/30"></div>
-              <Image
-                src={session.imageUrl || "/placeholder.svg?height=600&width=600"}
-                alt={session.title}
-                fill
-                className="object-cover"
+              <DynamicSessionPlayer
+                audioUrl={getAudioUrl(session.id)}
+                title={session.title}
+                subtitle={session.subtitle}
+                onComplete={handleSessionComplete}
+                className="w-full h-full"
               />
 
               {session.isPremium && (
-                <div className="absolute top-4 right-4 bg-purple-500/20 backdrop-blur-sm rounded-full px-3 py-1 flex items-center gap-1">
+                <div className="absolute top-4 right-4 bg-purple-500/20 backdrop-blur-sm rounded-full px-3 py-1 flex items-center gap-1 z-30">
                   <Star className="h-4 w-4 text-purple-300" />
                   <span className="text-sm font-medium text-purple-300">Premium</span>
                 </div>
@@ -142,46 +149,15 @@ export default function SessionPage() {
                   </ul>
                 </div>
 
-                <div className="space-y-4">
-                  <div className="relative h-2 bg-white/10 rounded-full overflow-hidden">
-                    <div
-                      className="absolute h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full"
-                      style={{ width: `${(currentTime / duration) * 100}%` }}
-                    ></div>
+                {sessionCompleted && (
+                  <div className="backdrop-blur-md bg-green-900/20 border border-green-500/20 rounded-xl p-4">
+                    <h3 className="text-white font-medium mb-2">Sessão Concluída!</h3>
+                    <p className="text-sm text-[#a0a0b0]">
+                      Parabéns por completar esta sessão. Como você se sente? Lembre-se que a prática regular traz os
+                      melhores resultados.
+                    </p>
                   </div>
-
-                  <div className="flex justify-between text-xs text-[#a0a0b0]">
-                    <span>{formatTime(currentTime)}</span>
-                    <span>{formatTime(duration)}</span>
-                  </div>
-
-                  <div className="flex justify-center items-center gap-4">
-                    <button className="p-2 text-white/70 hover:text-white transition-colors">
-                      <SkipBack className="h-5 w-5" />
-                    </button>
-                    <button
-                      className="p-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 rounded-full text-white"
-                      onClick={handlePlayPause}
-                    >
-                      {isPlaying ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
-                    </button>
-                    <button className="p-2 text-white/70 hover:text-white transition-colors">
-                      <SkipForward className="h-5 w-5" />
-                    </button>
-                  </div>
-
-                  <div className="flex items-center gap-3">
-                    <Volume2 className="h-4 w-4 text-[#a0a0b0]" />
-                    <input
-                      type="range"
-                      min="0"
-                      max="100"
-                      value={volume}
-                      onChange={(e) => setVolume(Number.parseInt(e.target.value))}
-                      className="w-full h-1 bg-white/10 rounded-full appearance-none [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:h-3 [&::-webkit-slider-thumb]:w-3 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-white"
-                    />
-                  </div>
-                </div>
+                )}
               </div>
             </div>
           </div>
@@ -254,7 +230,7 @@ export default function SessionPage() {
           </div>
 
           {!isPremium && (
-            <div className="mt-16 backdrop-blur-md bg-gradient-to-br from-purple-900/10 to-blue-900/10 border border-purple-500/20 rounded-3xl p-8">
+            <div className="mt-16 backdrop-blur-md bg-gradient-to-br from-purple-900/10 to-blue-900/10 border border-purple-500/20 rounded-3xl p-6 md:p-8">
               <div className="flex flex-col md:flex-row items-center gap-8">
                 <div className="w-full md:w-2/3">
                   <div className="flex items-center gap-2 mb-3">
@@ -307,7 +283,7 @@ export default function SessionPage() {
       </main>
 
       <footer className="border-t border-white/10 py-8 relative z-10">
-        <div className="container max-w-6xl">
+        <div className="container max-w-6xl px-4 md:px-6">
           <div className="flex flex-col md:flex-row justify-between items-center gap-4">
             <div className="flex items-center gap-2">
               <div className="w-6 h-6 relative">

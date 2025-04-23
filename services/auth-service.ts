@@ -99,6 +99,47 @@ export function updateUser(userData: Partial<User>): void {
   localStorage.setItem("user", JSON.stringify(updatedUser))
 }
 
+// Modificação na função getCurrentUser e atualização da função para salvar o nome do provedor
+
+// Ao fazer login com Google, Apple ou e-mail, usar o nome real da conta
+export function saveAuthenticatedUser(userData: {
+  name: string
+  email: string
+  provider: "email" | "google" | "apple" | "demo"
+}): void {
+  if (typeof window === "undefined") return
+
+  const userObject: User = {
+    name: userData.name, // Nome real do usuário
+    email: userData.email,
+    provider: userData.provider,
+    premium: false,
+    lastSessionUsed: null,
+    sessionsUsedToday: 0,
+    lastSessionDate: null,
+    experiences: [],
+    challenges: [],
+    intentions: [],
+    notifications: [
+      {
+        id: `welcome-${Date.now()}`,
+        type: "update",
+        title: "Bem-vindo ao Neureon!",
+        description: "Estamos felizes em tê-lo conosco. Explore nossas sessões e comece sua jornada de transformação.",
+        read: false,
+        date: new Date().toISOString(),
+        actionText: "Explorar sessões",
+        actionLink: "/sessoes",
+      },
+    ],
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString(),
+  }
+
+  localStorage.setItem("isAuthenticated", "true")
+  localStorage.setItem("user", JSON.stringify(userObject))
+}
+
 // Funções de banco de dados
 export function saveUserExperience(experience: Omit<UserExperience, "id" | "date">): void {
   const user = getCurrentUser()

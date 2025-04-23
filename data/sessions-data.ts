@@ -23,7 +23,7 @@ export const sessions: Session[] = [
     duration: "11 MIN",
     frequency: "963 Hz",
     category: "foco",
-    isPremium: false,
+    isPremium: true, // Alterado para premium
     imageUrl: "/images/sessions/foco.jpg",
     audioUrl: "/audio/foco.mp3",
     relatedIntentions: ["foco", "clareza"],
@@ -53,9 +53,9 @@ export const sessions: Session[] = [
     duration: "20 MIN",
     frequency: "396 Hz",
     category: "relaxamento",
-    isPremium: false,
+    isPremium: false, // Mantido como gratuito (tem áudio)
     imageUrl: "/images/sessions/relaxamento.jpg",
-    audioUrl: "/audio/relaxamento.mp3",
+    audioUrl: "/audio/relaxamento.mp3", // Áudio "O Lado Oculto da Luz"
     relatedIntentions: ["relaxamento", "paz"],
     benefits: ["Alívio do estresse", "Relaxamento muscular", "Tranquilidade mental"],
     tags: ["relaxamento", "estresse", "tranquilidade", "delta"],
@@ -98,9 +98,9 @@ export const sessions: Session[] = [
     duration: "22 MIN",
     frequency: "174 Hz",
     category: "meditacao",
-    isPremium: false,
+    isPremium: false, // Mantido como gratuito (tem áudio)
     imageUrl: "/images/sessions/silencio.jpg",
-    audioUrl: "/audio/silencio.mp3",
+    audioUrl: "/audio/silencio.mp3", // Áudio "Uma energia de despertar interior"
     relatedIntentions: ["paz", "intuicao", "clareza"],
     benefits: ["Quietude mental", "Conexão interior", "Presença aumentada"],
     tags: ["silêncio", "meditação", "presença", "quietude"],
@@ -143,9 +143,9 @@ export const sessions: Session[] = [
     duration: "45 MIN",
     frequency: "396 Hz",
     category: "sono",
-    isPremium: false,
+    isPremium: false, // Mantido como gratuito (tem áudio)
     imageUrl: "/images/sessions/sono.jpg",
-    audioUrl: "/audio/sono.mp3",
+    audioUrl: "/audio/sono.mp3", // Áudio "Cello 532hz"
     relatedIntentions: ["relaxamento", "cura"],
     benefits: ["Sono profundo", "Recuperação física", "Descanso mental"],
     tags: ["sono", "descanso", "delta", "noite"],
@@ -232,4 +232,9 @@ export function getFreeSessionForIntention(intentionId: string): Session | undef
 export function getBestPremiumSessionForIntention(intentionId: string): Session | undefined {
   const relatedSessions = getSessionsByIntention(intentionId)
   return relatedSessions.find((session) => session.isPremium) || getPremiumSessions()[0]
+}
+
+// Função para obter todas as sessões
+export function getAllSessions(): Session[] {
+  return sessions
 }

@@ -67,9 +67,9 @@ export function DailyIntention() {
 
   if (!mounted) {
     return (
-      <div className="backdrop-blur-md rounded-3xl overflow-hidden transition-all duration-500 bg-gradient-to-br from-[#0a0a1a]/80 to-[#121228]/80 border border-white/10">
-        <div className="p-6 relative">
-          <div className="h-64 bg-white/5 rounded-xl animate-pulse"></div>
+      <div className="backdrop-blur-md rounded-2xl overflow-hidden transition-all duration-500 bg-gradient-to-br from-[#0a0a1a]/80 to-[#121228]/80 border border-white/10">
+        <div className="p-4 relative">
+          <div className="h-48 bg-white/5 rounded-xl animate-pulse"></div>
         </div>
       </div>
     )
@@ -78,10 +78,10 @@ export function DailyIntention() {
   const recommendedSessions = getRecommendedSessions()
 
   return (
-    <div className="backdrop-blur-md rounded-3xl overflow-hidden transition-all duration-500 bg-gradient-to-br from-[#0a0a1a]/80 to-[#121228]/80 border border-white/10">
-      <div className="p-6 relative">
-        <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-medium text-white transition-colors">Intenção Diária</h2>
+    <div className="backdrop-blur-md rounded-2xl overflow-hidden transition-all duration-500 bg-gradient-to-br from-[#0a0a1a]/80 to-[#121228]/80 border border-white/10">
+      <div className="p-4 relative">
+        <div className="flex justify-between items-center mb-3">
+          <h2 className="text-xl font-medium text-white transition-colors">Intenção Diária</h2>
         </div>
 
         {selectedIntention ? (

@@ -9,6 +9,7 @@ import { GlowEffect } from "@/components/glow-effect"
 import { StarField } from "@/components/star-field"
 import { QuoteBlock } from "@/components/quote-system"
 import { DailyIntention } from "@/components/daily-intention/daily-intention"
+import { ChatWidget } from "@/components/in-page-chat/chat-widget"
 
 export default function Home() {
   return (
@@ -62,7 +63,14 @@ export default function Home() {
             <span className="inline-block w-8 h-[1px] bg-blue-400 mr-3"></span>
             Defina Sua Intenção Diária
           </h2>
-          <DailyIntention />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className="md:col-span-2">
+              <DailyIntention />
+            </div>
+            <div className="md:col-span-1">
+              <ChatWidget variant="embedded" size="large" className="h-full" />
+            </div>
+          </div>
         </section>
 
         <section className="container max-w-6xl py-16">
@@ -197,7 +205,7 @@ export default function Home() {
                   <Link href="/premium">Apenas R$4,90/mês</Link>
                 </Button>
                 <Button className="rounded-full px-6 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 border-0 shadow-[0_0_15px_rgba(66,153,225,0.3)] hover:shadow-[0_0_25px_rgba(66,153,225,0.5)] transition-all duration-300">
-                  Teste Grátis
+                  <Link href="/premium">Teste Grátis</Link>
                 </Button>
               </div>
             </div>
@@ -244,6 +252,9 @@ export default function Home() {
           </div>
         </div>
       </footer>
+
+      {/* Chat flutuante */}
+      <ChatWidget variant="floating" />
     </div>
   )
 }

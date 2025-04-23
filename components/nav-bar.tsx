@@ -4,7 +4,7 @@ import { useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { usePathname, useRouter } from "next/navigation"
-import { Menu, User, LogOut, Settings } from "lucide-react"
+import { Menu, User, LogOut, Settings, Users } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
@@ -46,6 +46,7 @@ export function NavBar() {
       if (authenticated) {
         const user = getCurrentUser()
         if (user) {
+          // Usar o nome do usuário da conta conectada
           setUserName(user.name)
         }
       }
@@ -56,7 +57,7 @@ export function NavBar() {
     { name: "Início", href: "/" },
     { name: "Sessões", href: "/sessoes" },
     { name: "Jornada Consciente", href: "/jornada" },
-    { name: "Desafio Mental", href: "/desafio-mental" },
+    { name: "Comunidade", href: "/comunidade" },
     { name: "Conhecimento", href: "/conhecimento" },
     { name: "Premium", href: "/premium" },
   ]
@@ -74,7 +75,7 @@ export function NavBar() {
 
   return (
     <header
-      className={`sticky top-0 z-50 transition-all duration-300 ${
+      className={`sticky top-0 z-40 transition-all duration-300 ${
         scrolled ? "bg-black/70 backdrop-blur-lg border-b border-white/10 py-3" : "bg-transparent py-5"
       }`}
     >
@@ -133,6 +134,12 @@ export function NavBar() {
                     <Link href="/dashboard" className="cursor-pointer">
                       <User className="mr-2 h-4 w-4" />
                       <span>Meu Dashboard</span>
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link href="/comunidade" className="cursor-pointer">
+                      <Users className="mr-2 h-4 w-4" />
+                      <span>Comunidade</span>
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuItem asChild>
